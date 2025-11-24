@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client"
+  // output can be left default or you can set an explicit output
+  output = "./generated/client" 
+}
+
+datasource db {
+  provider = "postgresql" // or "sqlite" / "mysql" depending on your DB
+  // do NOT include `url = "..."` here in Prisma 7
+}
+
+model User {
+  id         String    @id @default(cuid())
+  email      String    @unique
+  name       String?
+  role       Role      @default(TEACHER)
+  createdAt  DateTime  @default(now())
+  // relations
+  students   Student[] @relation("TeacherStudents")
+}
+
+enum Role {
+  TEACHER
+  STUDENT
+  PARENT
+}
+
+model Student {
+  id              String    @id @default(cuid())
+  teacherId       String
+  name            String
+  email           String?
+  phone           String?
+  hourlyRateCents Int       @default(0)
+  defaultMinutes  Int       @default(60)
+  notes           String?
+  createdAt       DateTime  @default(now())
+
+  lessons         Lesson[] 
+  payments        Payment[]
+  teacher         User      @relation(fields: [teacherId], references: [id], name: "TeacherStudents")
+}
+
+model Lesson {
+  id          String     @id @default(cuid())
+  studentId   String
+  teacherId   String
+  scheduledAt DateTime
+  durationMin Int
+  createdAt   DateTime   @default(now())
+
+  attendance  Attendance?
+  student     Student    @relation(fields: [studentId], references: [id])
+}
+
+model Attendance {
+  id        String           @id @default(cuid())
+  lessonId  String           @unique
+  date      DateTime
+  status    AttendanceStatus
+  actualMin Int
+  reason    String?          // reason for absence
+  note      String?
+  lesson    Lesson           @relation(fields: [lessonId], references: [id])
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  MAKEUP
+}
+
+model Payment {
+  id          String   @id @default(cuid())
+  studentId   String
+  amountCents Int
+  method      String?
+  date        DateTime @default(now())
+
+  student     Student  @relation(fields: [studentId], references: [id])
+}

@@ -1,0 +1,27 @@
+// prisma.config.ts
+import "dotenv/config"; // make sure .env is loaded for local dev
+import path from "node:path";
+import { defineConfig, env } from "prisma/config";
+
+type Env = {
+  DATABASE_URL: string;
+};
+
+export default defineConfig({
+  // path to your schema
+  schema: path.join("prisma", "schema.prisma"),
+
+  // migrations config
+  migrations: {
+    path: path.join("prisma", "migrations"),
+  },
+
+  // Provide the database url via env helper
+  datasource: {
+    // wraps process.env loading and is used by prisma CLI
+    url: process.env.DATABASE_URL!,
+  },
+
+  // optional: seed command if you want (example)
+  // migrations: { seed: 'tsx prisma/seed.ts' }
+});

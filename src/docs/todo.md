@@ -1,7 +1,3 @@
-apply theme ig
-
-add login and logout page
-
 Have to install prisma
 
 connect with the neon db
