@@ -71,6 +71,12 @@ export function ThemeSwitcher() {
   const [open, setOpen] = React.useState(false);
   const { theme, setTheme } = useTheme();
 
+  React.useEffect(() => {
+    if (!theme) {
+      setTheme("system");
+    }
+  }, [theme, setTheme]);
+
   // Helper function to get current theme base name and mode
   const getCurrentThemeInfo = () => {
     if (!theme || theme === "system") {
@@ -110,7 +116,7 @@ export function ThemeSwitcher() {
         <div className="p-4 pb-0">
           <div className="flex flex-col gap-4">
             <h3 className="text-sm font-medium">Appearance</h3>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-2">
               <Button
                 variant="outline"
                 size="lg"
@@ -138,25 +144,6 @@ export function ThemeSwitcher() {
                   <div className="h-2 w-2/3 rounded-sm bg-[#6b7280]"></div>
                 </div>
                 <span className="text-xs">Dark</span>
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className={cn(
-                  "flex h-24 flex-col items-center justify-center gap-2 border-2",
-                  currentMode === "system" && "border-primary",
-                )}
-                onClick={() => setTheme("system")}
-              >
-                <div className="flex h-12 w-full">
-                  <div className="h-12 w-1/2 rounded-l bg-[#f9fafb] p-2">
-                    <div className="h-2 w-2/3 rounded-sm bg-[#d1d5db]"></div>
-                  </div>
-                  <div className="h-12 w-1/2 rounded-r bg-[#1f2937] p-2">
-                    <div className="h-2 w-2/3 rounded-sm bg-[#6b7280]"></div>
-                  </div>
-                </div>
-                <span className="text-xs">Auto</span>
               </Button>
             </div>
             <Separator className="my-2" /> <h3 className="text-sm font-medium">Theme Color</h3>
