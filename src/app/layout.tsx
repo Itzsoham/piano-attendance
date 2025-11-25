@@ -50,9 +50,7 @@ export default function RootLayout({
             "bronze-dark",
           ]}
         >
-          <Providers>
-            {children}
-          </Providers>
+          <Providers>{children}</Providers>
         </ThemeProvider>
         <Toaster />
       </body>
