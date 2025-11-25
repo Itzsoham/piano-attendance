@@ -1,11 +1,7 @@
 // prisma.config.ts
 import "dotenv/config"; // make sure .env is loaded for local dev
 import path from "node:path";
-import { defineConfig, env } from "prisma/config";
-
-type Env = {
-  DATABASE_URL: string;
-};
+import { defineConfig } from "prisma/config";
 
 export default defineConfig({
   // path to your schema
