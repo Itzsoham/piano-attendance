@@ -1,7 +1,7 @@
 generator client {
   provider = "prisma-client"
   // output can be left default or you can set an explicit output
-  output = "./generated/client" 
+  output = "../src/lib/generated"
 }
 
 datasource db {
@@ -14,6 +14,7 @@ model User {
   email      String    @unique
   name       String?
   role       Role      @default(TEACHER)
+  hashedPassword String?   // <-- new
   createdAt  DateTime  @default(now())
   // relations
   students   Student[] @relation("TeacherStudents")

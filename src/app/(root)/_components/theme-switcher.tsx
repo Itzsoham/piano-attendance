@@ -70,12 +70,26 @@ const themes = [
 export function ThemeSwitcher() {
   const [open, setOpen] = React.useState(false);
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   React.useEffect(() => {
     if (!theme) {
       setTheme("system");
     }
   }, [theme, setTheme]);
+
+  if (!mounted) {
+    return (
+      <Button variant="ghost" size="icon">
+        <PaletteIcon className="h-5 w-5" />
+        <span className="sr-only">Toggle theme</span>
+      </Button>
+    );
+  }
 
   // Helper function to get current theme base name and mode
   const getCurrentThemeInfo = () => {

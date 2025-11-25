@@ -7,6 +7,7 @@ import "@/styles/themes.css";
 import { APP_CONFIG } from "@/config/app-config";
 import { ThemeProvider } from "@/context/Theme";
 import { Toaster } from "@/components/ui/sonner";
+import { Providers } from "@/components/providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -49,7 +50,9 @@ export default function RootLayout({
             "bronze-dark",
           ]}
         >
-          {children}
+          <Providers>
+            {children}
+          </Providers>
         </ThemeProvider>
         <Toaster />
       </body>
