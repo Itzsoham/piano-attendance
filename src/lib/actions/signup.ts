@@ -10,7 +10,7 @@ export async function signup(formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const confirmPassword = formData.get("confirmPassword") as string;
-  const role = (formData.get("role") as string) || "STUDENT";
+  const role = (formData.get("role") as string) || "TEACHER";
 
   // Basic validations
   if (!email || !password) {
@@ -42,6 +42,6 @@ export async function signup(formData: FormData) {
     },
   });
 
-  // Redirect to login page
-  redirect("/auth/login");
+  // Redirect to login page with callback to dashboard
+  redirect("/auth/login?callbackUrl=/dashboard");
 }

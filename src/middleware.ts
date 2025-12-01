@@ -23,19 +23,20 @@ const PROTECTED_ROUTES = [
 
 // Role-based route access control
 const ROLE_BASED_ROUTES = {
-  admin: [
+  ADMIN: [
     "/admin",
     "/admin/users",
     "/admin/settings",
     "/admin/reports",
   ],
-  teacher: [
+  TEACHER: [
     "/teacher",
     "/teacher/classes",
     "/teacher/attendance",
     "/teacher/students",
+    "/students",
   ],
-  student: [
+  STUDENT: [
     "/student",
     "/student/attendance",
     "/student/schedule",
@@ -101,13 +102,22 @@ export default auth((req) => {
   }
 
   // Check role-based access
-  const userRole = session.user.role;
+  // const userRole = session.user.role;
   
-  if (!hasRoleAccess(pathname, userRole)) {
-    // Redirect to unauthorized page or dashboard
-    const unauthorizedUrl = new URL("/unauthorized", nextUrl.origin);
-    return NextResponse.redirect(unauthorizedUrl);
-  }
+  // console.log("Middleware Debug:", {
+  //   pathname,
+  //   userRole,
+  //   isAuthenticated,
+  //   matchesTeacher: matchesRoute(pathname, ROLE_BASED_ROUTES.TEACHER),
+  //   hasAccess: hasRoleAccess(pathname, userRole)
+  // });
+
+  // if (!hasRoleAccess(pathname, userRole)) {
+  //   console.log("Access Denied for:", pathname, "Role:", userRole);
+  //   // Redirect to unauthorized page or dashboard
+  //   // const unauthorizedUrl = new URL("/unauthorized", nextUrl.origin);
+  //   return NextResponse.redirect(unauthorizedUrl);
+  // }
 
   // Allow access
   return NextResponse.next();
