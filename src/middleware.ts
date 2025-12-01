@@ -9,8 +9,8 @@ import { auth } from "@/auth";
 // Public routes that don't require authentication
 const PUBLIC_ROUTES = [
   "/",
-  "/auth/login",
-  "/auth/register",
+  "/login",
+  "/register",
   "/auth/error",
 ];
 
@@ -89,9 +89,15 @@ export default auth((req) => {
 
   // Redirect to login if not authenticated and trying to access protected routes
   if (!isAuthenticated) {
-    const loginUrl = new URL("/auth/login", nextUrl.origin);
+    const loginUrl = new URL("/login", nextUrl.origin);
     loginUrl.searchParams.set("callbackUrl", pathname);
     return NextResponse.redirect(loginUrl);
+  }
+
+  // Redirect authenticated users from index to dashboard
+  if (pathname === "/") {
+    const dashboardUrl = new URL("/dashboard", nextUrl.origin);
+    return NextResponse.redirect(dashboardUrl);
   }
 
   // Check role-based access
@@ -119,8 +125,15 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - public folder files (public assets)
-     * - API routes (handled separately)
+     * - /api/auth/* (NextAuth API routes)
      */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|api/auth|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
+
+/**
+ * Use Node.js runtime instead of Edge Runtime
+ * This is required because Prisma (used in auth) needs Node.js built-in modules
+ */
+export const runtime = "nodejs";
+
