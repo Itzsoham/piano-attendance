@@ -2,6 +2,12 @@ import NextAuth, { DefaultSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import {
+  InvalidCredentialsError,
+  MissingCredentialsError,
+  UserNotFoundError,
+  DatabaseError,
+} from "@/lib/auth-errors";
 
 declare module "next-auth" {
   interface Session {
@@ -20,9 +26,16 @@ declare module "next-auth" {
   }
 }
 
+interface Credentials {
+  email: string;
+  password: string;
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
-    strategy: "jwt", // or "database" if you implement sessions in db
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours
   },
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
@@ -33,22 +46,61 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials) return null;
-        const { email, password } = credentials as { email: string; password: string };
-        const user = await prisma.user.findUnique({ where: { email } });
-        if (!user || !user.hashedPassword) return null;
+        try {
+          // Validate credentials exist
+          if (!credentials?.email || !credentials?.password) {
+            throw new MissingCredentialsError();
+          }
 
-        const isValid = await bcrypt.compare(password, user.hashedPassword);
-        if (!isValid) return null;
+          const { email, password } = credentials as Credentials;
 
-        // return minimal user object that will be saved in JWT
-        return { id: user.id, email: user.email, name: user.name, role: user.role };
+          // Find user in database
+          const user = await prisma.user.findUnique({ where: { email } });
+          
+          if (!user) {
+            throw new UserNotFoundError();
+          }
+
+          if (!user.hashedPassword) {
+            throw new InvalidCredentialsError("Account setup incomplete");
+          }
+
+          // Verify password
+          const isValid = await bcrypt.compare(password, user.hashedPassword);
+          
+          if (!isValid) {
+            throw new InvalidCredentialsError();
+          }
+
+          // Return minimal user object that will be saved in JWT
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+          };
+        } catch (error) {
+          // Log error for debugging (consider using a proper logger in production)
+          console.error("Authentication error:", error);
+
+          // Re-throw custom errors
+          if (
+            error instanceof MissingCredentialsError ||
+            error instanceof UserNotFoundError ||
+            error instanceof InvalidCredentialsError
+          ) {
+            throw error;
+          }
+
+          // Wrap unexpected errors
+          throw new DatabaseError("Authentication failed due to server error");
+        }
       },
     }),
   ],
   callbacks: {
     async jwt({ token, user }) {
-      // when user signs in, user object exists — attach id & role
+      // When user signs in, user object exists — attach id & role
       if (user) {
         token.id = user.id;
         token.role = user.role;
@@ -56,14 +108,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token;
     },
     async session({ session, token }) {
-      // expose id & role to client session
-      session.user.id = token.id as string;
-      (session.user as any).role = token.role as string;
+      // Expose id & role to client session with proper typing
+      if (token.id && typeof token.id === "string") {
+        session.user.id = token.id;
+      }
+      
+      if (token.role && typeof token.role === "string") {
+        session.user.role = token.role;
+      }
+      
       return session;
     },
   },
   pages: {
-    signIn: "/auth/login", // optional custom sign-in page
+    signIn: "/auth/login",
   },
-  // secret: process.env.NEXTAUTH_SECRET, // ensure SECRET in prod
 });
