@@ -1,6 +1,11 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Theme preset styles: these override CSS variables based on the selected data-theme-preset */
+@import "../styles/presets/red.css";
+@import "../styles/presets/blue.css";
+@import "../styles/presets/green.css";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -119,4 +124,12 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+html {
+  overscroll-behavior: none;
+}
+
+.disable-transitions * {
+  transition: none !important;
 }

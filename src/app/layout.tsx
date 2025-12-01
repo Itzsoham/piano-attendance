@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
@@ -5,9 +6,11 @@ import "@/app/globals.css";
 import "@/styles/themes.css";
 
 import { APP_CONFIG } from "@/config/app-config";
-import { ThemeProvider } from "@/context/Theme";
 import { Toaster } from "@/components/ui/sonner";
 import { Providers } from "@/components/providers";
+import { getPreference } from "@/server/server-actions";
+import { PreferencesStoreProvider } from "@/stores/preferences/preferences-provider";
+import { THEME_MODE_VALUES, THEME_PRESET_VALUES, type ThemePreset, type ThemeMode } from "@/types/preferences/theme";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,43 +19,26 @@ export const metadata: Metadata = {
   description: APP_CONFIG.meta.description,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
+  const themeMode = await getPreference<ThemeMode>("theme_mode", THEME_MODE_VALUES, "light");
+  const themePreset = await getPreference<ThemePreset>("theme_preset", THEME_PRESET_VALUES, "default");
+
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-          themes={[
-            "light",
-            "dark",
-            "red-light",
-            "red-dark",
-            "rose-light",
-            "rose-dark",
-            "orange-light",
-            "orange-dark",
-            "green-light",
-            "green-dark",
-            "blue-light",
-            "blue-dark",
-            "violet-light",
-            "violet-dark",
-            "teal-light",
-            "teal-dark",
-            "bronze-light",
-            "bronze-dark",
-          ]}
-        >
+    <html
+      lang="en"
+      className={themeMode === "dark" ? "dark" : ""}
+      data-theme-preset={themePreset}
+      suppressHydrationWarning
+    >
+      <body className={`${inter.className} min-h-screen antialiased`}>
+        <PreferencesStoreProvider themeMode={themeMode} themePreset={themePreset}>
           <Providers>{children}</Providers>
-        </ThemeProvider>
-        <Toaster />
+          <Toaster />
+        </PreferencesStoreProvider>
       </body>
     </html>
   );
