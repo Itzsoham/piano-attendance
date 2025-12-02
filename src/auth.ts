@@ -104,7 +104,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (user) {
         token.id = user.id;
         token.role = user.role;
-        console.log("Auth Debug - JWT Callback (Sign In):", { id: user.id, role: user.role });
+
       }
       return token;
     },
@@ -117,12 +117,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (token.role && typeof token.role === "string") {
         session.user.role = token.role;
       }
-      
-      console.log("Auth Debug - Session Callback:", { 
-        userId: session.user.id, 
-        userRole: session.user.role,
-        tokenRole: token.role 
-      });
       
       return session;
     },

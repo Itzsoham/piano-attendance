@@ -101,25 +101,17 @@ export default auth((req) => {
     return NextResponse.redirect(dashboardUrl);
   }
 
-  // Check role-based access
-  // const userRole = session.user.role;
-  
-  // console.log("Middleware Debug:", {
-  //   pathname,
-  //   userRole,
-  //   isAuthenticated,
-  //   matchesTeacher: matchesRoute(pathname, ROLE_BASED_ROUTES.TEACHER),
-  //   hasAccess: hasRoleAccess(pathname, userRole)
-  // });
+   // Check role-based access
+  const userRole = session.user.role;
 
-  // if (!hasRoleAccess(pathname, userRole)) {
-  //   console.log("Access Denied for:", pathname, "Role:", userRole);
-  //   // Redirect to unauthorized page or dashboard
-  //   // const unauthorizedUrl = new URL("/unauthorized", nextUrl.origin);
-  //   return NextResponse.redirect(unauthorizedUrl);
-  // }
+  if (!hasRoleAccess(pathname, userRole)) {
 
-  // Allow access
+    // Redirect to unauthorized page or dashboard
+    const unauthorizedUrl = new URL("/unauthorized", nextUrl.origin);
+    return NextResponse.redirect(unauthorizedUrl);
+  }
+
+    // Allow access
   return NextResponse.next();
 });
 

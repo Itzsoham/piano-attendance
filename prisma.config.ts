@@ -1,5 +1,3 @@
-// prisma.config.ts
-import "dotenv/config"; // make sure .env is loaded for local dev
 import path from "node:path";
 import { defineConfig } from "prisma/config";
 
