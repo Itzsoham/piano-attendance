@@ -5,8 +5,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql" // or "sqlite" / "mysql" depending on your DB
-  // do NOT include `url = "..."` here in Prisma 7
+  provider = "postgresql" 
 }
 
 model User {
@@ -16,7 +15,7 @@ model User {
   role       Role      @default(TEACHER)
   hashedPassword String?   // <-- new
   createdAt  DateTime  @default(now())
-  // relations
+  
   students   Student[] @relation("TeacherStudents")
 }
 

@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 import { auth } from "@/auth";
 
 /**
@@ -7,43 +6,19 @@ import { auth } from "@/auth";
  */
 
 // Public routes that don't require authentication
-const PUBLIC_ROUTES = [
-  "/",
-  "/login",
-  "/register",
-  "/auth/error",
-];
+const PUBLIC_ROUTES = ["/", "/login", "/register", "/auth/error"];
 
 // Routes that require authentication but no specific role
-const PROTECTED_ROUTES = [
-  "/dashboard",
-  "/profile",
-  "/settings",
-];
+// const PROTECTED_ROUTES = ["/dashboard", "/profile", "/settings"];
 
 // Role-based route access control
 const ROLE_BASED_ROUTES = {
-  ADMIN: [
-    "/admin",
-    "/admin/users",
-    "/admin/settings",
-    "/admin/reports",
-  ],
-  TEACHER: [
-    "/teacher",
-    "/teacher/classes",
-    "/teacher/attendance",
-    "/teacher/students",
-    "/students",
-  ],
-  STUDENT: [
-    "/student",
-    "/student/attendance",
-    "/student/schedule",
-  ],
+  ADMIN: ["/admin", "/admin/users", "/admin/settings", "/admin/reports"],
+  TEACHER: ["/teacher", "/teacher/classes", "/teacher/attendance", "/teacher/students", "/students"],
+  STUDENT: ["/student", "/student/attendance", "/student/schedule"],
 } as const;
 
-type UserRole = keyof typeof ROLE_BASED_ROUTES;
+// type UserRole   = keyof typeof ROLE_BASED_ROUTES;
 
 /**
  * Check if a path matches any route in the given array
@@ -101,17 +76,16 @@ export default auth((req) => {
     return NextResponse.redirect(dashboardUrl);
   }
 
-   // Check role-based access
+  // Check role-based access
   const userRole = session.user.role;
 
   if (!hasRoleAccess(pathname, userRole)) {
-
     // Redirect to unauthorized page or dashboard
     const unauthorizedUrl = new URL("/unauthorized", nextUrl.origin);
     return NextResponse.redirect(unauthorizedUrl);
   }
 
-    // Allow access
+  // Allow access
   return NextResponse.next();
 });
 
@@ -138,4 +112,3 @@ export const config = {
  * This is required because Prisma (used in auth) needs Node.js built-in modules
  */
 export const runtime = "nodejs";
-
