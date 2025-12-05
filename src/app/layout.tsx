@@ -34,7 +34,7 @@ export default async function RootLayout({
       data-theme-preset={themePreset}
       suppressHydrationWarning
     >
-      <body className={`${inter.className} min-h-screen antialiased`}>
+      <body className={`${inter.className} min-h-screen antialiased`} suppressHydrationWarning>
         <PreferencesStoreProvider themeMode={themeMode} themePreset={themePreset}>
           <Providers>{children}</Providers>
           <Toaster />

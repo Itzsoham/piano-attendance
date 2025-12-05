@@ -42,9 +42,8 @@ export const sidebarItems: NavGroup[] = [
       },
       {
         title: "Attendance",
-        url: "/attendance",
+        url: "/calendar",
         icon: Calendar,
-        comingSoon: true,
       },
       {
         title: "Reports",
