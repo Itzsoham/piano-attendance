@@ -13,16 +13,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { StudentWithStats } from "@/lib/actions/students";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 export const columns: ColumnDef<StudentWithStats>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -38,24 +36,22 @@ export const columns: ColumnDef<StudentWithStats>[] = [
     cell: ({ row }) => {
       const email = row.original.email;
       const phone = row.original.phone;
-      
+
       return (
         <div className="flex flex-col gap-1">
           {email && (
             <div className="flex items-center gap-2 text-sm">
-              <Mail className="h-3 w-3 text-muted-foreground" />
+              <Mail className="text-muted-foreground h-3 w-3" />
               <span>{email}</span>
             </div>
           )}
           {phone && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className="text-muted-foreground flex items-center gap-2 text-sm">
               <Phone className="h-3 w-3" />
               <span>{phone}</span>
             </div>
           )}
-          {!email && !phone && (
-            <span className="text-sm text-muted-foreground">No contact info</span>
-          )}
+          {!email && !phone && <span className="text-muted-foreground text-sm">No contact info</span>}
         </div>
       );
     },
@@ -64,10 +60,7 @@ export const columns: ColumnDef<StudentWithStats>[] = [
     accessorKey: "hourlyRateCents",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Hourly Rate
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -95,10 +88,7 @@ export const columns: ColumnDef<StudentWithStats>[] = [
     id: "lessons",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Lessons
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -118,10 +108,7 @@ export const columns: ColumnDef<StudentWithStats>[] = [
     id: "totalPayments",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Total Paid
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -153,17 +140,15 @@ export const columns: ColumnDef<StudentWithStats>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(student.id)}
-            >
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(student.id)}>
               Copy student ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>View details</DropdownMenuItem>
-            <DropdownMenuItem>Edit student</DropdownMenuItem>
-            <DropdownMenuItem className="text-destructive">
-              Delete student
+            <DropdownMenuItem asChild>
+              <Link href={`/students/${student.id}/edit`}>Edit student</Link>
             </DropdownMenuItem>
+            <DropdownMenuItem className="text-destructive">Delete student</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
