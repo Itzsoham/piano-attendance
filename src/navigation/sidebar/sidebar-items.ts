@@ -1,12 +1,4 @@
-import {
-  LayoutDashboard,
-  Users,
-  Calendar,
-  Settings,
-  FileText,
-  BarChart,
-  type LucideIcon,
-} from "lucide-react";
+import { LayoutDashboard, Users, Calendar, Settings, FileText, BarChart, User, type LucideIcon } from "lucide-react";
 
 export interface NavSubItem {
   title: string;
@@ -72,6 +64,11 @@ export const sidebarItems: NavGroup[] = [
     id: 2,
     label: "Settings",
     items: [
+      {
+        title: "Profile",
+        url: "/profile",
+        icon: User,
+      },
       {
         title: "Settings",
         url: "/settings",
