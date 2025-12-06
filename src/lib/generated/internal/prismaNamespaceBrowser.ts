@@ -55,7 +55,8 @@ export const ModelName = {
   Student: 'Student',
   Lesson: 'Lesson',
   Attendance: 'Attendance',
-  Payment: 'Payment'
+  Payment: 'Payment',
+  MonthlyReport: 'MonthlyReport'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -135,6 +136,21 @@ export const PaymentScalarFieldEnum = {
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+export const MonthlyReportScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  month: 'month',
+  year: 'year',
+  summary: 'summary',
+  comments: 'comments',
+  nextMonthPlan: 'nextMonthPlan',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MonthlyReportScalarFieldEnum = (typeof MonthlyReportScalarFieldEnum)[keyof typeof MonthlyReportScalarFieldEnum]
 
 
 export const SortOrder = {

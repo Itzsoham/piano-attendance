@@ -42,3 +42,8 @@ export type Attendance = Prisma.AttendanceModel
  * 
  */
 export type Payment = Prisma.PaymentModel
+/**
+ * Model MonthlyReport
+ * 
+ */
+export type MonthlyReport = Prisma.MonthlyReportModel

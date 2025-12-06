@@ -148,6 +148,9 @@ export const columns: ColumnDef<StudentWithStats>[] = [
             <DropdownMenuItem asChild>
               <Link href={`/students/${student.id}/edit`}>Edit student</Link>
             </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href={`/students/${student.id}/reports`}>Monthly Reports</Link>
+            </DropdownMenuItem>
             <DropdownMenuItem className="text-destructive">Delete student</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

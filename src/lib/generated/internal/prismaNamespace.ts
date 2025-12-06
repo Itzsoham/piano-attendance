@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.0.0
- * Query Engine version: 0c19ccc313cf9911a90d99d2ac2eb0280c76c513
+ * Prisma Client JS version: 7.0.1
+ * Query Engine version: f09f2815f091dbba658cdcd2264306d88bb5bda6
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.0.0",
-  engine: "0c19ccc313cf9911a90d99d2ac2eb0280c76c513"
+  client: "7.0.1",
+  engine: "f09f2815f091dbba658cdcd2264306d88bb5bda6"
 }
 
 /**
@@ -388,7 +388,8 @@ export const ModelName = {
   Student: 'Student',
   Lesson: 'Lesson',
   Attendance: 'Attendance',
-  Payment: 'Payment'
+  Payment: 'Payment',
+  MonthlyReport: 'MonthlyReport'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -404,7 +405,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "student" | "lesson" | "attendance" | "payment"
+    modelProps: "user" | "student" | "lesson" | "attendance" | "payment" | "monthlyReport"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -778,6 +779,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    MonthlyReport: {
+      payload: Prisma.$MonthlyReportPayload<ExtArgs>
+      fields: Prisma.MonthlyReportFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MonthlyReportFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyReportPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MonthlyReportFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyReportPayload>
+        }
+        findFirst: {
+          args: Prisma.MonthlyReportFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyReportPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MonthlyReportFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyReportPayload>
+        }
+        findMany: {
+          args: Prisma.MonthlyReportFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyReportPayload>[]
+        }
+        create: {
+          args: Prisma.MonthlyReportCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyReportPayload>
+        }
+        createMany: {
+          args: Prisma.MonthlyReportCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MonthlyReportCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyReportPayload>[]
+        }
+        delete: {
+          args: Prisma.MonthlyReportDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyReportPayload>
+        }
+        update: {
+          args: Prisma.MonthlyReportUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyReportPayload>
+        }
+        deleteMany: {
+          args: Prisma.MonthlyReportDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MonthlyReportUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MonthlyReportUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyReportPayload>[]
+        }
+        upsert: {
+          args: Prisma.MonthlyReportUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyReportPayload>
+        }
+        aggregate: {
+          args: Prisma.MonthlyReportAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMonthlyReport>
+        }
+        groupBy: {
+          args: Prisma.MonthlyReportGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MonthlyReportGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MonthlyReportCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MonthlyReportCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -878,6 +953,21 @@ export const PaymentScalarFieldEnum = {
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+export const MonthlyReportScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  month: 'month',
+  year: 'year',
+  summary: 'summary',
+  comments: 'comments',
+  nextMonthPlan: 'nextMonthPlan',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MonthlyReportScalarFieldEnum = (typeof MonthlyReportScalarFieldEnum)[keyof typeof MonthlyReportScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1077,6 +1167,7 @@ export type GlobalOmitConfig = {
   lesson?: Prisma.LessonOmit
   attendance?: Prisma.AttendanceOmit
   payment?: Prisma.PaymentOmit
+  monthlyReport?: Prisma.MonthlyReportOmit
 }
 
 /* Types for Logging */
