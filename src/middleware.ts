@@ -54,26 +54,31 @@ export default auth((req) => {
   const { nextUrl } = req;
   const pathname = nextUrl.pathname;
   const session = req.auth;
+  const isAuthenticated = !!session?.user;
 
-  // Allow public routes
+  // Handle root path redirect logic
+  if (pathname === "/") {
+    if (isAuthenticated) {
+      // Logged in users go to dashboard
+      const dashboardUrl = new URL("/dashboard", nextUrl.origin);
+      return NextResponse.redirect(dashboardUrl);
+    } else {
+      // Not logged in users go to login
+      const loginUrl = new URL("/login", nextUrl.origin);
+      return NextResponse.redirect(loginUrl);
+    }
+  }
+
+  // Allow public routes (excluding root which is handled above)
   if (matchesRoute(pathname, PUBLIC_ROUTES)) {
     return NextResponse.next();
   }
-
-  // Check if user is authenticated
-  const isAuthenticated = !!session?.user;
 
   // Redirect to login if not authenticated and trying to access protected routes
   if (!isAuthenticated) {
     const loginUrl = new URL("/login", nextUrl.origin);
     loginUrl.searchParams.set("callbackUrl", pathname);
     return NextResponse.redirect(loginUrl);
-  }
-
-  // Redirect authenticated users from index to dashboard
-  if (pathname === "/") {
-    const dashboardUrl = new URL("/dashboard", nextUrl.origin);
-    return NextResponse.redirect(dashboardUrl);
   }
 
   // Check role-based access
